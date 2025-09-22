@@ -1,0 +1,77 @@
+// datasource and generator
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model ERC20Transfer {
+  id        String   @id @default(cuid())
+  txHash    String
+  block     Int
+  from      String
+  to        String
+  value     String
+  timestamp DateTime
+
+  @@index([from])
+  @@index([to])
+  @@index([txHash])
+  @@index([block])
+}
+
+model ERC721Transfer {
+  id        String   @id @default(cuid())
+  txHash    String
+  block     Int
+  from      String
+  to        String
+  tokenId   String
+  contract  String
+  timestamp DateTime
+
+  @@index([contract])
+  @@index([from])
+  @@index([to])
+  @@index([txHash])
+  @@index([block])
+}
+
+model ERC1155Transfer {
+  id        String   @id @default(cuid())
+  txHash    String
+  block     Int
+  operator  String
+  from      String
+  to        String
+  tokenId   String
+  value     String
+  contract  String
+  timestamp DateTime
+
+  @@index([contract])
+  @@index([from])
+  @@index([to])
+  @@index([txHash])
+  @@index([block])
+}
+
+model ContractDeployment {
+  id        String   @id @default(cuid())
+  txHash    String
+  block     Int
+  contract  String   @unique
+  deployer  String
+  bytecode  String?
+  tokenStandard String? // 'ERC20', 'ERC721', 'ERC1155', or null
+  timestamp DateTime
+
+  @@index([deployer])
+  @@index([txHash])
+  @@index([block])
+  @@index([contract])
+  @@index([tokenStandard])
+} 
